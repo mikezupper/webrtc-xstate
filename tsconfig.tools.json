@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "allowJs": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@peerweave/peer": ["./packages/peer/src/index.ts"],
+      "@peerweave/media": ["./packages/media/src/index.ts"],
+      "@peerweave/call": ["./packages/call/src/index.ts"],
+      "@peerweave/signaling-websocket": ["./packages/signaling-websocket/src/index.ts"]
+    }
+  },
+  "include": [
+    "tools/**/*.ts",
+    "tools/**/*.mjs",
+    "tests/**/*.ts",
+    "packages/*/tests/**/*.ts",
+    "packages/*/vite.config.ts",
+    "apps/*/vite.config.ts",
+    "vitest.config.ts",
+    "vitest.*.config.ts",
+    "apps/*/tests/**/*.ts"
+  ]
+}

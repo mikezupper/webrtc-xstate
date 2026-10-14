@@ -1,0 +1,31 @@
+{
+  "name": "@peerweave/call",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Managed one-to-one sessions composed from Peerweave peer and media packages.",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@peerweave/media": "workspace:^",
+    "@peerweave/peer": "workspace:^",
+    "xstate": "5.33.2"
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

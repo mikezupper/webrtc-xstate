@@ -1,0 +1,29 @@
+name: Verify
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .node-version
+      - uses: pnpm/action-setup@v6.1.0
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install browser engines
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Verify workspace
+        run: pnpm check
+      - name: Verify controlled TURN paths
+        run: pnpm test:turn
+      - name: Audit critical behavioral assertions
+        run: pnpm test:mutations

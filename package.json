@@ -1,0 +1,47 @@
+{
+  "name": "peerweave-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "node tools/dev.mjs",
+    "build:packages": "pnpm -r --filter './packages/**' build",
+    "build": "pnpm build:packages && pnpm --filter @peerweave/demo --filter @peerweave/signaling-server build",
+    "typecheck": "pnpm -r typecheck && tsc --noEmit -p tsconfig.tools.json",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "check:repo": "node tools/check-repository.mjs",
+    "test": "vitest run",
+    "test:browser": "vitest run --config vitest.browser.config.ts",
+    "test:coverage": "vitest run --config vitest.coverage.config.ts --coverage",
+    "check:packages": "node tools/check-packages.mjs",
+    "check:examples": "pnpm build:packages && node tools/check-examples.mjs",
+    "check": "pnpm lint && pnpm check:repo && pnpm build && pnpm typecheck && pnpm test:coverage && pnpm test:browser && pnpm test:e2e && pnpm check:packages && pnpm check:examples && pnpm check:size",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:turn": "node tools/test-turn.mjs",
+    "changeset": "changeset",
+    "release:status": "changeset status",
+    "release:version": "changeset version && pnpm install --lockfile-only",
+    "pack:release": "pnpm build:packages && node tools/pack-release.mjs",
+    "check:size": "node tools/check-size.mjs",
+    "test:mutations": "node tools/test-mutations.mjs"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@axe-core/playwright": "4.13.0",
+    "@biomejs/biome": "2.5.15",
+    "@changesets/cli": "3.0.3",
+    "@types/node": "26.6.5",
+    "@vitest/browser-playwright": "5.0.4",
+    "@vitest/coverage-v8": "5.0.4",
+    "playwright": "1.64.1",
+    "publint": "0.3.25",
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.4"
+  }
+}

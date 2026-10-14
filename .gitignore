@@ -39,6 +39,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+**/.gyral/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -102,3 +103,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Peerweave verification artifacts
+.pnpm-store/
+.artifacts/
+playwright-report/
+test-results/
+
+.vitest/
