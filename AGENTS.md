@@ -10,7 +10,8 @@ Peerweave is a pnpm workspace for composable browser WebRTC packages.
 - [Testing](docs/testing.md): test-first loop, coverage, native browser contracts.
 - [Reliability](docs/reliability.md): cancellation, recovery, signaling assumptions.
 - [Quality status](docs/quality.md): measured progress and remaining work.
-- [Examples guide](apps/demo/README.md) and [Gyral plan](docs/exec-plans/active/002-gyral-examples.md).
+- [Examples guide](apps/demo/README.md), [Gyral plan](docs/exec-plans/active/002-gyral-examples.md)
+  and [visual design plan](docs/exec-plans/active/003-example-visual-design.md).
 
 ## Commands
 

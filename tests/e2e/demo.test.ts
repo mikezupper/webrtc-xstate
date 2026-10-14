@@ -56,6 +56,27 @@ it("connects two demo tabs with native camera/microphone capture, exchanges chat
       .toBe(true);
     await a.getByRole("button", { name: "Send", exact: true }).click();
     await expect.poll(() => b.locator("#messages").textContent()).toContain("Hello Peerweave");
+    expect(await a.locator('#messages [data-from="you"]').textContent()).toContain(
+      "Hello Peerweave",
+    );
+    expect(await b.locator('#messages [data-from="peer"]').textContent()).toContain(
+      "Hello Peerweave",
+    );
+    const microphone = a.getByRole("button", { name: "Microphone", exact: true });
+    expect(await microphone.getAttribute("aria-pressed")).toBe("true");
+    await microphone.click();
+    await expect.poll(() => microphone.getAttribute("aria-pressed")).toBe("false");
+    await microphone.click();
+    await expect.poll(() => microphone.getAttribute("aria-pressed")).toBe("true");
+    await a.getByRole("button", { name: "Connection stats", exact: true }).click();
+    const report = a.getByRole("dialog", { name: "Connection report" });
+    await expect.poll(() => report.isVisible()).toBe(true);
+    await expect.poll(() => a.locator("#report").textContent()).toContain("candidate-pair");
+    await a.keyboard.press("Escape");
+    // Closed at once; its exit transition may keep it painted a moment longer.
+    await expect
+      .poll(() => report.evaluate((dialog: HTMLDialogElement) => dialog.open))
+      .toBe(false);
     await a.getByRole("button", { name: "Hang up", exact: true }).click();
     for (const page of [a, b]) {
       await expect.poll(() => page.locator("#call-status").textContent()).toBe("ended");

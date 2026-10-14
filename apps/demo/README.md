@@ -94,9 +94,24 @@ See [release checks](../../docs/releasing.md).
 - `pnpm check`: the complete workspace gate, including consumer package/bundle validation.
 
 Native streams, files, channels and URLs stay in controllers. Gyral receives serializable UI
-snapshots through subscriptions; actions execute through drivers. The media hook touches only
-its own video element. Removing the component or leaving the page disposes its runtime.
+snapshots through subscriptions; actions execute through drivers. Element hooks own only small
+native helpers: `mediaBinding` attaches a stream to its video, `audioLevel` reads loudness through
+its own Web Audio analyser, and `fileDrop` forwards dropped files to a file input. Each disposes
+with its element. Removing the component or leaving the page disposes its runtime.
 Create a fresh component/runtime after terminal disposal.
 
-Shared styling uses CSS layers, perceptual theme tokens, logical properties and container queries.
-Both system themes, reduced motion, visible keyboard focus and native form controls are supported.
+## Visual design
+
+Each page sets `main[data-phase]` from its state (idle, lobby, ready, ringing, starting,
+connecting, active, recovering, failed, ended; preparing/live for media; offered/sending/complete
+for transfers). `src/style.css` maps the phase to one hue, and every surface, button, thread and
+focus ring derives from it with `oklch()`, `color-mix()` and `light-dark()`. The call and support
+pages share the stage, dock, chat and report dialog in `src/call/parts.ts`; the masthead, hero,
+connection thread and step tracker live in `src/shared/shell.ts`.
+
+The stylesheet is layered (`reset, tokens, base, layout, components, states, enhancements,
+utilities`), uses logical properties and container queries, and supports both system themes,
+increased contrast, forced colours, reduced motion and visible keyboard focus. Newer features
+(cross-document view transitions, scroll-driven animation, customizable select, squircle corners)
+are progressive enhancements. Fonts in `src/fonts` are self-hosted under the SIL Open Font License.
+See the [visual design plan](../../docs/exec-plans/active/003-example-visual-design.md).

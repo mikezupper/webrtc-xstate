@@ -1,14 +1,33 @@
-import { command, define, defineDriver, each, html, type TemplateResult } from "@gyral/core";
+import { command, define, defineDriver, html } from "@gyral/core";
 import { type CallModel, type CallMsg, Workbench } from "../call/component.js";
-import { mediaBinding } from "../shared/runtime.js";
-import { EXAMPLE_ROOM_PATTERN, footer, navigation } from "../shared/shell.js";
+import type { CallView } from "../call/controller.js";
+import { type CallMood, callMood, chat, moodCopy, reportDialog, stage } from "../call/parts.js";
+import { EXAMPLE_ROOM_PATTERN, footer, help, hero, navigation, weave } from "../shared/shell.js";
 import { type InviteAction, supportGuide } from "./controller.js";
 export type SupportMsg =
   | CallMsg
   | { readonly _tag: "SupportAction"; readonly action: InviteAction };
 export const supportActions = defineDriver<InviteAction, void, string>("example-action");
-const row = (message: { readonly id: number; readonly text: string }): TemplateResult =>
-  html`<li><bdi>${message.text}</bdi></li>`;
+/** Like a call's mood, but ringing while an invitation waits for an answer. */
+export function supportMood(view: CallView): CallMood {
+  const mood = callMood(view);
+  return mood === "ready" && (view.invitation === "incoming" || view.invitation === "outgoing")
+    ? "ringing"
+    : mood;
+}
+const supportSteps = ["Join room", "Invite", "Accept", "Live"];
+const supportStep: Record<CallMood, number> = {
+  idle: 0,
+  lobby: 0,
+  ready: 1,
+  ringing: 2,
+  starting: 3,
+  connecting: 3,
+  active: 3,
+  recovering: 3,
+  failed: 3,
+  ended: -1,
+};
 const sharedIntents = Workbench.spec.intent;
 if (!sharedIntents) throw new Error("The shared workbench intents are required.");
 export const Support = define<CallModel, SupportMsg, { readonly initialRoom: string }>()(
@@ -46,19 +65,24 @@ export const Support = define<CallModel, SupportMsg, { readonly initialRoom: str
     view: (s, i) => {
       const view = s.view;
       const joined = ["connecting", "waiting", "ready"].includes(view.relay);
-      const running = ["connecting", "active", "recovering"].includes(view.phase);
+      const mood = supportMood(view);
       const canInvite =
         view.paired &&
         view.phase === "idle" &&
         ["idle", "declined", "cancelled"].includes(view.invitation ?? "idle");
-      return html`${navigation("support")}<main id="main"><hgroup class="hero"><p class="eyebrow">CALL / AN EXPLICIT INVITATION</p><h1>A support call, on your terms.</h1><p>Invite a peer, let them choose, and connect when both sides are ready.</p></hgroup>
-      <section class="instructions panel" aria-labelledby="support-instructions"><h2 id="support-instructions">Try a support session</h2><ol><li>Open this example in two tabs and join the same room.</li><li>Choose media preferences. Press <strong>Invite peer</strong> in one tab; press <strong>Accept call</strong> in the other.</li><li>Allow camera/microphone access. Both previews must be ready before the connection starts.</li><li>Use chat or Share screen during the call. Hang up and leave/rejoin for another session.</li></ol><p class="hint">This reference demonstrates application invitations around <code>@peerweave/call</code>. The local relay does not authenticate participants.</p></section>
-      <section class="panel" aria-labelledby="support-connect"><h2 id="support-connect">Room and invitation</h2><form data-intent=${i.Join}><label for="room">Room</label><input id="room" value=${s.room} data-intent=${i.Room} pattern=${EXAMPLE_ROOM_PATTERN} maxlength="48" required/><button id="join" type="submit" ?disabled=${joined}>Join room</button><button type="button" data-intent=${i.Leave} ?disabled=${!joined}>Leave room</button></form>
-      <fieldset><legend>Media preferences</legend><label><input id="audio" type="checkbox" ?checked=${s.audio} ?disabled=${view.invitation === "outgoing" || view.invitation === "accepted"} data-intent=${i.Audio}/> Microphone</label><label><input id="video" type="checkbox" ?checked=${s.video} ?disabled=${view.invitation === "outgoing" || view.invitation === "accepted"} data-intent=${i.Video}/> Camera</label></fieldset><div class="controls"><button type="button" class="primary" data-intent=${i.Invite} ?disabled=${!canInvite}>Invite peer</button><button type="button" data-intent=${i.AcceptInvite} ?disabled=${view.invitation !== "incoming"}>Accept call</button><button type="button" data-intent=${i.DeclineInvite} ?disabled=${view.invitation !== "incoming"}>Decline call</button><button type="button" data-intent=${i.CancelInvite} ?disabled=${view.invitation !== "outgoing"}>Cancel invitation</button></div>
-      <p class="status-line">Invitation: <output id="invitation-status">${view.invitation ?? "idle"}</output> · Call: <output id="call-status">${view.phase}</output></p><p id="next-step" role="status">${supportGuide(view)}</p></section>
-      <section aria-labelledby="support-video"><h2 id="support-video">Live media</h2><p id="live-media-note" class="hint">Live calls have no automatic captions. Use the text chat below for written communication.</p><div class="videos"><figure><video id="local" width="640" height="400" muted autoplay playsinline aria-describedby="live-media-note" ${mediaBinding("local", view.revision)}></video><figcaption>You</figcaption></figure><figure><video id="remote" width="640" height="400" autoplay playsinline aria-describedby="live-media-note" ${mediaBinding("remote", view.revision)}></video><figcaption>Your peer</figcaption></figure></div></section>
-      <section class="panel" aria-labelledby="support-controls"><h2 id="support-controls">During the call</h2><div class="controls"><button type="button" data-intent=${i.Hangup} ?disabled=${!running && view.phase !== "starting" && view.phase !== "waiting"}>Hang up</button><button type="button" data-intent=${i.Mute} ?disabled=${!running}>${view.microphone ? "Mute microphone" : "Unmute microphone"}</button><button type="button" data-intent=${i.Camera} ?disabled=${!running}>${view.camera ? "Pause camera" : "Resume camera"}</button><button type="button" data-intent=${i.Share} ?disabled=${!running || view.screen}>Share screen</button><button type="button" data-intent=${i.StopShare} ?disabled=${!view.screen}>Stop sharing</button><button type="button" data-intent=${i.Stats} ?disabled=${!running}>Connection stats</button></div></section>
-      <p id="feedback" role="alert">${view.feedback}</p><section class="panel" aria-labelledby="support-chat"><h2 id="support-chat">Session chat</h2><ol id="messages" aria-live="polite">${each(view.messages, (message) => message.id, row)}</ol><form data-intent=${i.Send}><label for="message">Message</label><input id="message" value=${s.message} data-intent=${i.Message} maxlength="1024"/><button type="submit" ?disabled=${!view.chatReady}>Send</button></form></section><details class="panel"><summary>Connection report</summary><pre id="report"><samp>${view.report || "Use Connection stats during the call."}</samp></pre></details>
+      const locked = view.invitation === "outgoing" || view.invitation === "accepted";
+      return html`${navigation("support")}<main id="main" data-phase=${mood} data-invitation=${view.invitation ?? "idle"}>
+      <header class="hero-row">${hero("Call · an explicit invitation", "A support call, on your terms.", "Invite a peer, let them choose, and connect when both sides are ready.")}${weave({ you: view.relay !== "offline", peer: view.paired, step: supportStep[mood], steps: supportSteps, label: view.invitation === "incoming" ? "Your peer is calling you" : moodCopy[mood].label })}</header>
+      <section class="panel session" aria-labelledby="support-connect"><h2 id="support-connect">Room and invitation</h2>
+        <form class="join" data-intent=${i.Join}><label for="room">Room</label><input id="room" value=${s.room} data-intent=${i.Room} pattern=${EXAMPLE_ROOM_PATTERN} maxlength="48" required autocomplete="off" spellcheck="false" ?readonly=${joined}/><button type="submit" class="primary" ?disabled=${joined}>Join room</button><button type="button" data-intent=${i.Leave} ?disabled=${!joined}>Leave room</button></form>
+        <fieldset class="switches"><legend>Media</legend><label class="switch"><input id="audio" type="checkbox" ?checked=${s.audio} ?disabled=${locked} data-intent=${i.Audio}/> Microphone</label><label class="switch"><input id="video" type="checkbox" ?checked=${s.video} ?disabled=${locked} data-intent=${i.Video}/> Camera</label></fieldset>
+        <menu class="actions invitation"><li><button type="button" class="primary" data-intent=${i.Invite} ?disabled=${!canInvite}>Invite peer</button></li><li><button type="button" class="primary answer" data-intent=${i.AcceptInvite} ?disabled=${view.invitation !== "incoming"}>Accept call</button></li><li><button type="button" data-intent=${i.DeclineInvite} ?disabled=${view.invitation !== "incoming"}>Decline call</button></li><li><button type="button" data-intent=${i.CancelInvite} ?disabled=${view.invitation !== "outgoing"}>Cancel invitation</button></li></menu>
+        <p class="chips"><span class="chip">Invitation <output id="invitation-status">${view.invitation ?? "idle"}</output></span><span class="chip">Call <output id="call-status">${view.phase}</output></span></p>
+        <p id="next-step" class="next-step" role="status">${supportGuide(view)}</p><p id="feedback" class="feedback" role="alert">${view.feedback}</p>
+      </section>
+      <div class="call-grid">${stage(s, mood, i, { start: false })}${chat(s, "Session chat", i)}</div>
+      ${help("Try a support session", html`<ol><li>Open this example in two tabs and join the same room.</li><li>Choose media preferences. Press <strong>Invite peer</strong> in one tab; press <strong>Accept call</strong> in the other.</li><li>Allow camera/microphone access. Both previews must be ready before the connection starts.</li><li>Use chat or Share screen during the call. Hang up and leave/rejoin for another session.</li></ol><p>This reference demonstrates application invitations around <code>@peerweave/call</code>. The local relay does not authenticate participants.</p>`)}
+      ${reportDialog(s, i)}
     </main>${footer()}`;
     },
   },

@@ -5,10 +5,26 @@ export interface DeviceChoice {
   readonly label: string;
   readonly kind: "audioinput" | "videoinput";
 }
+export interface TrackInfo {
+  readonly kind: string;
+  readonly label: string;
+  readonly detail: string;
+}
+/** Pure: what the preview shows for one captured track. */
+export function describeTrack(
+  track: Pick<MediaStreamTrack, "kind" | "label" | "getSettings">,
+): TrackInfo {
+  const { width, height } = track.getSettings();
+  return {
+    kind: track.kind,
+    label: track.label || "Browser device",
+    detail: width && height ? `${width} × ${height}` : "",
+  };
+}
 export interface MediaView {
   readonly phase: "idle" | "preparing" | "ready" | "failed";
   readonly devices: readonly DeviceChoice[];
-  readonly tracks: readonly string[];
+  readonly tracks: readonly TrackInfo[];
   readonly feedback: string;
   readonly revision: number;
 }
@@ -56,7 +72,11 @@ export class MediaController extends Observable<MediaView> {
     const devices = await enumerateDevices();
     this.change({
       devices: devices
-        .filter((device) => device.kind === "audioinput" || device.kind === "videoinput")
+        // Before permission, browsers list placeholders without IDs: the default covers them.
+        .filter(
+          (device) =>
+            device.deviceId && (device.kind === "audioinput" || device.kind === "videoinput"),
+        )
         .map((device, index) => ({
           id: device.deviceId,
           kind: device.kind as DeviceChoice["kind"],
@@ -123,10 +143,7 @@ export class MediaController extends Observable<MediaView> {
       });
       this.change({
         phase: "ready",
-        tracks: capture.stream.getTracks().map((track) => {
-          const settings = track.getSettings();
-          return `${track.kind}: ${track.label || "browser device"}${settings.width ? ` · ${settings.width} × ${settings.height}` : ""}`;
-        }),
+        tracks: capture.stream.getTracks().map(describeTrack),
         feedback: "Preview ready. Media stays on this device; no peer connection is created.",
       });
       await this.devices();

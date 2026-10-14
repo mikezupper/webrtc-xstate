@@ -6,6 +6,24 @@ import {
 } from "@peerweave/signaling-websocket";
 import { createRoomCall, type RoomCall } from "../room-call.js";
 import { errorText, Observable } from "../shared/runtime.js";
+import { type CallStats, summarizeStats } from "./stats.js";
+export interface ChatMessage {
+  readonly id: number;
+  readonly from: "you" | "peer";
+  readonly text: string;
+  /** Epoch milliseconds, so the model stays JSON-compatible. */
+  readonly at: number;
+}
+/** Pure: appends one chat message and keeps the latest hundred. */
+export function appendMessage(
+  messages: readonly ChatMessage[],
+  from: ChatMessage["from"],
+  text: string,
+  at: number,
+): readonly ChatMessage[] {
+  const id = (messages.at(-1)?.id ?? -1) + 1;
+  return [...messages, { id, from, text, at }].slice(-100);
+}
 export interface CallView {
   readonly invitation?: "idle" | "incoming" | "outgoing" | "accepted" | "declined" | "cancelled";
   readonly relay: SignalingState["phase"] | "offline";
@@ -17,9 +35,10 @@ export interface CallView {
   readonly camera: boolean;
   readonly screen: boolean;
   readonly chatReady: boolean;
-  readonly messages: readonly { readonly id: number; readonly text: string }[];
+  readonly messages: readonly ChatMessage[];
   readonly feedback: string;
   readonly report: string;
+  readonly stats: CallStats | null;
   readonly revision: number;
 }
 export const initialCallView: CallView = {
@@ -35,6 +54,7 @@ export const initialCallView: CallView = {
   messages: [],
   feedback: "",
   report: "",
+  stats: null,
   revision: 0,
 };
 export type CallAction =
@@ -72,7 +92,6 @@ export class CallController extends Observable<CallView> {
   protected remote: MediaStream | null = null;
   protected disposed = false;
   private chat: RTCDataChannel | undefined;
-  private nextMessage = 0;
   constructor(
     private readonly roomPrefix = "",
     private readonly rtcConfiguration?: RTCConfiguration,
@@ -100,6 +119,7 @@ export class CallController extends Observable<CallView> {
     this.roomCall?.dispose();
     this.roomCall = undefined;
     this.clearMedia();
+    if (this.snapshot.stats) this.change({ stats: null });
   }
   protected receive(signal: unknown) {
     return this.roomCall?.receiveSignal(signal);
@@ -153,14 +173,12 @@ export class CallController extends Observable<CallView> {
     channel.onclose = () => this.change({ chatReady: false });
     channel.onerror = () => this.report("The data channel closed unexpectedly.");
     channel.onmessage = (event) => {
-      if (typeof event.data === "string") this.message(`Peer: ${event.data.slice(0, 1024)}`);
+      if (typeof event.data === "string") this.message("peer", event.data.slice(0, 1024));
     };
     if (channel.readyState === "open") this.change({ chatReady: true });
   }
-  private message(text: string) {
-    this.change({
-      messages: [...this.snapshot.messages, { id: this.nextMessage++, text }].slice(-100),
-    });
+  private message(from: ChatMessage["from"], text: string) {
+    this.change({ messages: appendMessage(this.snapshot.messages, from, text, Date.now()) });
   }
   protected join(room: string) {
     this.closeCall();
@@ -202,7 +220,8 @@ export class CallController extends Observable<CallView> {
   }
   async act(action: CallAction) {
     if (this.disposed) return;
-    this.change({ feedback: "" });
+    // Stats refresh on a timer while the report is open; they must not clear an error.
+    if (action._tag !== "Stats") this.change({ feedback: "" });
     switch (action._tag) {
       case "Join":
         this.join(action.room);
@@ -241,7 +260,7 @@ export class CallController extends Observable<CallView> {
         if (this.chat.bufferedAmount > 65536)
           throw new Error("Please wait for queued messages to send.");
         this.chat.send(action.text);
-        this.message(`You: ${action.text}`);
+        this.message("you", action.text);
         return;
       case "Stats": {
         const report = await this.roomCall?.call.getStats();
@@ -257,7 +276,10 @@ export class CallController extends Observable<CallView> {
               packetsLost: item.packetsLost,
             });
         });
-        this.change({ report: JSON.stringify(summaries, null, 2) });
+        this.change({
+          report: JSON.stringify(summaries, null, 2),
+          stats: report ? summarizeStats(report, this.snapshot.stats ?? undefined) : null,
+        });
         return;
       }
     }

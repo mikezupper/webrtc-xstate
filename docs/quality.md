@@ -19,16 +19,16 @@ library coverage. Coverage is evidence of exercised behavior, not a proof of dev
 
 ## Verified behavior
 
-- Full `pnpm check` passed: lint, four package boundaries and 17 linked documents, all builds,
+- Full `pnpm check` passed: lint, four package boundaries and 18 linked documents, all builds,
   strict package/app/test/config typing, coverage, browsers, demo, fresh archives and sizes.
-- Coverage run: 151 tests in 16 files (141 Node cases plus 10 Chromium native cases).
+- Coverage run: 159 tests in 17 files (149 Node cases plus 10 Chromium native cases).
 - Shared browser suite: 18 passing cases across Chromium, Firefox and WebKit.
 - The original eight demo regressions remain enabled for native fake-device video/chat/hangup, camera denial,
   native room-name validation without pattern console errors, delayed media/chat-only startup,
   pending peer capture, denied peer capture, and waiting preview cleanup with fresh re-pairing.
   Pending/denied peer capture is controlled at the acquisition boundary; real permission dialogs
   remain manual checks. Screenshot inspected locally.
-- Four Gyral 0.3.6 example pages build. Seventeen DOM-free app model/protocol tests pass;
+- Four Gyral 0.3.6 example pages build. Twenty-five DOM-free app model/protocol tests pass;
   examples additionally verify independent preview/replacement/cancellation, exact file bytes,
   acceptance/decline/cancel and premature-receipt rejection, and support invitation races.
 - End-to-end suite: 18 passing cases in eight files. All four routes pass both themes across
