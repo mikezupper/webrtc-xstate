@@ -45,6 +45,13 @@ End-to-end test files run sequentially because their Vite instances share the de
 cache and their browsers use native media resources. Assertions and call deadlines stay enabled;
 the harness does not retry failing cases.
 
+The shared native-contract server binds to IPv4 loopback explicitly. Firefox derives its default
+ICE address lookup from the page's address family: IPv6 localhost on a runner without an IPv6
+route failed before gathering any candidates, including the raw browser-only reproduction.
+Contract files also run sequentially because device enumeration requires a visible document.
+Linux CI starts a headless PulseAudio service before native browser checks. These are harness
+fixtures; no browser assertions, connection deadlines or application behavior are relaxed.
+
 Demo readiness tests advance the page clock past the original connection/recovery deadline,
 then connect a later participant and exchange actual native video and chat. They also cover
 chat-only readiness, leaving/rejoining with owned preview tracks stopped, and peer capture failure.

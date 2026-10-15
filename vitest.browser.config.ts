@@ -14,6 +14,10 @@ export default defineConfig({
   test: {
     include: ["tests/browser/**/*.test.ts"],
     allowOnly: false,
+    // Firefox uses the page's address family for its default ICE route lookup.
+    api: { host: "127.0.0.1" },
+    // Device enumeration requires a visible document; do not compete for focus.
+    fileParallelism: false,
     testTimeout: 15000,
     browser: {
       enabled: true,

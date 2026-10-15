@@ -27,9 +27,6 @@ jobs:
           pulseaudio --start --exit-idle-time=-1
           pactl info
       - name: Verify workspace
-        env:
-          DEBUG: pw:browser
-          MOZ_LOG: timestamp,signaling:3,mtransport:5,nicer:5,MediaManager:5,cubeb:3
         run: pnpm check
       - name: Verify controlled TURN paths
         run: pnpm test:turn
