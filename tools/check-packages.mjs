@@ -5,6 +5,14 @@ import { dirname, resolve } from "node:path";
 import { assertPublicDeclarations } from "./public-declarations.mjs";
 
 const root = resolve(import.meta.dirname, "..");
+const pnpm = process.env.npm_execpath ?? "pnpm";
+const expectedManager = JSON.parse(
+  readFileSync(resolve(root, "package.json"), "utf8"),
+).packageManager;
+const actualManager = `pnpm@${execFileSync(pnpm, ["--version"], { cwd: root, encoding: "utf8" }).trim()}`;
+if (actualManager !== expectedManager) {
+  throw new Error(`Run this gate with ${expectedManager}; received ${actualManager}`);
+}
 const scratch = mkdtempSync(resolve(tmpdir(), "peerweave-artifacts-"));
 const fixture = resolve(scratch, "consumer");
 mkdirSync(fixture);
@@ -65,10 +73,12 @@ try {
     execFileSync("pnpm", ["store", "path"], { cwd: root, encoding: "utf8" }).trim(),
   );
   execFileSync(
-    "pnpm",
+    pnpm,
     [
       "install",
       "--offline",
+      // The active executable is already version-checked; do not resolve pnpm again offline.
+      "--pm-on-fail=ignore",
       "--ignore-scripts",
       "--store-dir",
       store,

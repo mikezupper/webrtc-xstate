@@ -84,3 +84,8 @@ dependencies. The mutation audit proves behavioral assertions detect broken term
 late capture cleanup and recovery bounds. CI runs the framework gates and controlled TURN contract.
 Production app/Traefik/Coturn deployment checks now belong to the independent
 `peerweave-deployment-example` repo; see the [boundary](deploying.md).
+
+Offline consumer installs reuse the active pnpm executable after checking it against the root's
+pinned version. They disable pnpm's own version-manager lookup for that command only; package
+installation still uses `--offline`. A fresh CI metadata cache otherwise tried to resolve pnpm
+itself before checking the already-cached application dependencies.

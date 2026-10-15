@@ -17,6 +17,12 @@ import config from "../apps/demo/vite.config.ts";
 import { createSignalingServer } from "../apps/signaling-server/src/server.ts";
 
 const root = resolve(import.meta.dirname, "..");
+const pnpm = process.env.npm_execpath ?? "pnpm";
+const expectedManager = JSON.parse(
+  readFileSync(resolve(root, "package.json"), "utf8"),
+).packageManager;
+const actualManager = `pnpm@${execFileSync(pnpm, ["--version"], { cwd: root, encoding: "utf8" }).trim()}`;
+assert.equal(actualManager, expectedManager, `Run this gate with ${expectedManager}`);
 const scratch = mkdtempSync(resolve(tmpdir(), "peerweave-examples-"));
 const fixture = resolve(scratch, "apps/demo");
 let browser, vite, relay;
@@ -66,10 +72,12 @@ try {
     execFileSync("pnpm", ["store", "path"], { cwd: root, encoding: "utf8" }).trim(),
   );
   execFileSync(
-    "pnpm",
+    pnpm,
     [
       "install",
       "--offline",
+      // The active executable is already version-checked; do not resolve pnpm again offline.
+      "--pm-on-fail=ignore",
       "--ignore-scripts",
       "--store-dir",
       store,
