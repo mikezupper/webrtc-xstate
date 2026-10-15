@@ -87,5 +87,8 @@ Production app/Traefik/Coturn deployment checks now belong to the independent
 
 Offline consumer installs reuse the active pnpm executable after checking it against the root's
 pinned version. They disable pnpm's own version-manager lookup for that command only; package
-installation still uses `--offline`. A fresh CI metadata cache otherwise tried to resolve pnpm
-itself before checking the already-cached application dependencies.
+installation still uses `--offline`. Before that install, a lockfile-only resolution prepares the
+independent consumer's graph, then `pnpm fetch` prepares its dependency cache. A frozen workspace
+install supplies package files but need not fetch the consumer's resolution/policy metadata.
+This setup works with a cold metadata cache while preserving
+the offline installation, installed-export, declaration and native-consumer assertions.

@@ -72,6 +72,17 @@ try {
   const store = dirname(
     execFileSync("pnpm", ["store", "path"], { cwd: root, encoding: "utf8" }).trim(),
   );
+  // Frozen workspace installs cache package files without registry resolution metadata.
+  // Resolve this independent consumer's graph before testing its offline installation.
+  execFileSync(
+    pnpm,
+    ["install", "--lockfile-only", "--ignore-scripts", "--pm-on-fail=ignore", "--store-dir", store],
+    { cwd: fixture, stdio: "inherit" },
+  );
+  execFileSync(pnpm, ["fetch", "--pm-on-fail=ignore", "--store-dir", store], {
+    cwd: fixture,
+    stdio: "inherit",
+  });
   execFileSync(
     pnpm,
     [

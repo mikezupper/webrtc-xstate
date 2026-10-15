@@ -71,6 +71,16 @@ try {
   const store = dirname(
     execFileSync("pnpm", ["store", "path"], { cwd: root, encoding: "utf8" }).trim(),
   );
+  // Resolve the independent graph; a frozen workspace install need not cache registry metadata.
+  execFileSync(
+    pnpm,
+    ["install", "--lockfile-only", "--ignore-scripts", "--pm-on-fail=ignore", "--store-dir", store],
+    { cwd: fixture, stdio: "pipe" },
+  );
+  execFileSync(pnpm, ["fetch", "--pm-on-fail=ignore", "--store-dir", store], {
+    cwd: fixture,
+    stdio: "pipe",
+  });
   execFileSync(
     pnpm,
     [
