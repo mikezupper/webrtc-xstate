@@ -1,6 +1,6 @@
 # Quality status
 
-Measured locally on 2026-10-14. The package family is implemented; first publication remains
+Measured locally on 2026-10-14. The package family is implemented; first npm publication remains
 subject to scope ownership, API review and real-device/external-network validation.
 Deployment checks and later measurements are recorded below with their dates.
 
@@ -130,3 +130,27 @@ After separation, the framework full gate passed with 163 combined coverage case
 contracts and all 18 existing end-to-end cases; its retained UDP/TCP TURN and ICE restart check
 also passed. The independent application owns 42 unit/model/request cases and its native app,
 Traefik and Coturn deployment results. No framework sample source or regression assertion changed.
+
+## GitHub source publication and CI (2026-10-15)
+
+The public framework is [peerweavejs/peerweave](https://github.com/peerweavejs/peerweave), transferred
+with existing history and repository identity. The independent application is
+[peerweavejs/peerweave-deployment-example](https://github.com/peerweavejs/peerweave-deployment-example).
+Both have canonical metadata, README badges/architecture/conventions, MIT licensing and community
+guidance/templates. Private vulnerability reporting and dependency vulnerability alerts are enabled.
+All package manifests remain private; GitHub source publication does not publish npm packages.
+
+[Full framework CI passed](https://github.com/peerweavejs/peerweave/actions/runs/38763051432)
+at commit `f7b5441010d602ef4cd13fcf8fb16e1fb4cd290d`: lint/boundaries/build/types, 163 combined
+coverage cases, 18 native contracts across three engines, all 18 existing example regressions,
+fresh packed-package/application consumers, bundle budgets, UDP/TCP TURN and mutation detection.
+The independent application's [full workflow passed](https://github.com/peerweavejs/peerweave-deployment-example/actions/runs/38759372809),
+including both images, authenticated Traefik HTTPS/WSS and controlled Coturn UDP/TCP/TLS/SNI paths.
+Earlier entries saying CI was configured but not run describe their historical checkpoints.
+
+Runner fixes are confined to the harness: explicit IPv4 loopback, sequential visible contract
+pages, headless Linux audio and preparation of independent consumer graphs/caches before offline
+installation with the already-verified pinned pnpm. Both consumer gates also passed with a cold
+metadata cache under `CI=true`. No library APIs, existing assertions or deadlines changed, and
+no retries were introduced. Public networks and real devices remain external acceptance work.
+See the [publication record](exec-plans/completed/007-github-publication.md).
