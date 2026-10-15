@@ -72,6 +72,11 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+.env.turn
+.env.traefik
+deploy/turn/private/
+deploy/turn/tls/
+deploy/traefik/private/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -111,3 +116,6 @@ playwright-report/
 test-results/
 
 .vitest/
+
+# Local IDE state
+.idea/

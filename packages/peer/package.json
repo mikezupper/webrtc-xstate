@@ -22,5 +22,24 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit -p tsconfig.json"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peerweavejs/peerweave.git",
+    "directory": "packages/peer"
+  },
+  "homepage": "https://github.com/peerweavejs/peerweave/tree/main/packages/peer#readme",
+  "bugs": {
+    "url": "https://github.com/peerweavejs/peerweave/issues"
+  },
+  "keywords": [
+    "peerweave",
+    "webrtc",
+    "typescript",
+    "browser",
+    "esm",
+    "peer-to-peer",
+    "perfect-negotiation",
+    "datachannel"
+  ]
 }

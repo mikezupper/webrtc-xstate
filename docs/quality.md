@@ -2,6 +2,7 @@
 
 Measured locally on 2026-10-14. The package family is implemented; first publication remains
 subject to scope ownership, API review and real-device/external-network validation.
+Deployment checks and later measurements are recorded below with their dates.
 
 | Package | Statements | Branches | Functions | Lines |
 | --- | ---: | ---: | ---: | ---: |
@@ -44,7 +45,8 @@ library coverage. Coverage is evidence of exercised behavior, not a proof of dev
 - All four pnpm tarballs passed publint, ESM type resolution, public-declaration isolation,
   actual fresh installation with transitive dependencies, inert Node imports and strict typing.
 - Changeset release-status preview includes all four libraries; manifests remain private.
-- Original legacy JS/HTML files remain byte-for-byte identical. No skipped/focused tests were found.
+- At that checkpoint, the archival legacy files remained unchanged and no skipped/focused tests were found.
+  The user subsequently removed the archival prototype.
 - Frozen-lockfile installation passed. Local execution used Node 24.15; CI pins Node 24.21.
   Remote CI was configured, not executed in this session.
 
@@ -76,3 +78,55 @@ authentication and invitation services, SFU rooms, system-audio mixing and frame
 outside this preview. The support example supplies application invitation logic for a local relay.
 Scope ownership, actual Safari/device verification and restrictive-network TURN/TLS
 checks remain in [the release procedure](releasing.md) and [the plan](exec-plans/active/001-foundation.md).
+
+## Container deployment verification (2026-10-15)
+
+- Both runtime images built using the pinned pnpm version and frozen dependency graph.
+  Compose references prebuilt images and requires an explicit public hostname.
+- Actual Traefik TLS/WSS routing passed all four compiled pages, rejected-origin signaling,
+  native two-browser video/chat and hangup. Both containers ran healthy as non-root users with
+  read-only root filesystems; the smoke deployment removed its own containers and network.
+- Final `pnpm check` passed with 163 combined coverage cases, 18 browser contract cases and
+  18 end-to-end cases. Coverage and bundle size metrics above are unchanged. An initial support
+  page startup timeout passed on unchanged isolated and full-suite reruns.
+- CI includes image builds and the deployment smoke; it was configured but not run remotely.
+  The relay remains a private reference with in-memory rooms; authentication, ICE credential
+  distribution and external-device checks remain the application limits described in the
+  [deployment guide](deploying.md).
+
+## Standalone Traefik and Coturn verification (2026-10-15)
+
+- All three Compose projects validate and use images without inline builds. Actual supplied
+  Traefik files passed HTTPS/WSS and native video/chat, private access, identity-alias/path
+  rejection, restricted Docker API discovery, non-root health and repeated ACME initialization.
+- Actual supplied Coturn files passed non-root startup/TLS health, certificate/hostname checks,
+  invalid-secret/hostname startup rejection, REST-authenticated allocations over UDP/TCP/TLS,
+  wrong/expired credential denial, and loopback/cloud-metadata peer denial. Native relay-only
+  bytes and ICE restart passed on all three transports and through Traefik SNI TLS passthrough.
+  Positive local exchange uses a temporary loopback exception; production policy is unchanged.
+- Both images were rebuilt and the original UDP/TCP TURN regression passed. Temporary deployment
+  containers, networks, volumes and credentials were removed; unrelated Docker resources were retained.
+- Full `pnpm check` passed all gates. A subsequent coverage run including the two new issuer
+  tests passed 165 cases in 19 files (155 Node and 10 Chromium); overall statements were 96.27%,
+  branches 90.72%, functions 98.77% and lines 98.52%. Bundle sizes remain those reported above.
+- Shared native contracts passed 18 cases across three engines; all 18 demo end-to-end cases
+  passed. Concurrent demo startup exposed intermittent page/fake-media readiness failures;
+  files now run sequentially because Vite instances share a dependency cache. Assertions,
+  deadlines and existing regression cases are unchanged, with no retries added.
+- CI includes both deployment checks but was not run remotely. Public DNS/ACME/firewall/NAT,
+  real devices and restrictive networks remain external checks. The demo still needs an
+  authenticated ICE endpoint, controller credential fetch and room authorization, described in
+  the [repository boundary](deploying.md); infrastructure checks do not establish that integration.
+
+## Deployment repository separation (2026-10-15)
+
+Production image builds, Compose projects, Traefik/Coturn configuration, credential-issuer tests
+and application deployment smokes moved to the separate `peerweave-deployment-example` repository.
+Earlier deployment results above are historical; new app/deployment evidence is owned there.
+The framework retains all four samples, browser regressions and its low-level TURN contract.
+The user's archival legacy-demo deletion is preserved. See the [boundary](deploying.md).
+
+After separation, the framework full gate passed with 163 combined coverage cases, 18 browser
+contracts and all 18 existing end-to-end cases; its retained UDP/TCP TURN and ICE restart check
+also passed. The independent application owns 42 unit/model/request cases and its native app,
+Traefik and Coturn deployment results. No framework sample source or regression assertion changed.

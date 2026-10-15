@@ -126,3 +126,28 @@ require independent useful contracts and follow-up execution plans.
 - Full `pnpm check` and frozen-lockfile installation passed; library coverage and bundle sizes
   remain at the previously recorded values.
 - The public package API and managed-call recovery limits are unchanged.
+
+### 2026-10-14: tunnel signaling origin configuration
+
+Status: implementation complete; restart the development process with its allowed page origins.
+
+- Reproduced HTTP 403 for the tunnel page origin through both the Vite proxy and public WSS
+  endpoint; the same relay accepts a localhost browser origin.
+- Decision: expose the relay's existing exact origin allowlist through
+  `PEERWEAVE_ALLOWED_ORIGINS`, a comma-separated list of full page origins. Preserve the
+  localhost default when unset; an explicit list replaces it. Keep Vite hostname checks separate.
+- [x] Accept a configured tunnel page origin through the actual relay entry point.
+- [x] Reject unlisted origins and preserve the unset localhost default.
+- [x] Document the single-tunnel demo route and verify the relevant checks.
+- Test-first verification: `pnpm exec vitest run apps/signaling-server/tests/main.test.ts`
+  initially failed with `Unexpected server response: 403`. The existing allowlist wiring was
+  an Obvious Implementation; the relevant signaling suite then passed all 29 tests.
+- Final `pnpm test` passed all 153 tests. Lint, repository checks, workspace type checks and
+  the signaling-server build passed. The public endpoint needs the documented environment
+  and a dev-process restart; the browser chooses WSS from the HTTPS page URL already.
+
+### 2026-10-15: deployment ownership
+
+The deployment app and production infrastructure moved to an independent consumer repository.
+Framework samples and native/TURN contracts remain here. The user removed the archival legacy
+prototype. See the [repository boundary](../../deploying.md) and separation plan 006.

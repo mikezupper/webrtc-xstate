@@ -49,4 +49,5 @@ packed consumer app without source aliases. Use semantic native controls and the
 
 - `pnpm test:turn` requires Linux/Docker; it tears down its own local Coturn container.
 - `pnpm release:status` previews Changeset releases; versioning and publication are separate.
+- [Deployment repository boundary](docs/deploying.md): production app and infrastructure ownership.
 - [Release procedure](docs/releasing.md) records scope ownership and real-device requirements.

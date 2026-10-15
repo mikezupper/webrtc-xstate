@@ -41,6 +41,10 @@ chat, terminal preview cleanup and native room-name constraints, including dashe
 characters and length limits without pattern console errors. Screenshots are stored under
 `.artifacts` for inspection.
 
+End-to-end test files run sequentially because their Vite instances share the demo dependency
+cache and their browsers use native media resources. Assertions and call deadlines stay enabled;
+the harness does not retry failing cases.
+
 Demo readiness tests advance the page clock past the original connection/recovery deadline,
 then connect a later participant and exchange actual native video and chat. They also cover
 chat-only readiness, leaving/rejoining with owned preview tracks stopped, and peer capture failure.
@@ -70,4 +74,6 @@ Repository checks enforce dependency direction and local links. A declaration-gr
 orchestration types escaping the call API. Fresh tarball installations verify actual transitive
 dependency resolution, inert imports and strict consumer typing. Bundle budgets include runtime
 dependencies. The mutation audit proves behavioral assertions detect broken terminal cancellation,
-late capture cleanup and recovery bounds. CI runs the same gates and controlled relay test.
+late capture cleanup and recovery bounds. CI runs the framework gates and controlled TURN contract.
+Production app/Traefik/Coturn deployment checks now belong to the independent
+`peerweave-deployment-example` repo; see the [boundary](deploying.md).

@@ -5,7 +5,8 @@ private. Registry publication is a separate, explicitly authorized action.
 
 ## Preparation
 
-1. Claim/verify the `@peerweave` npm scope and choose final registry/repository metadata.
+1. Claim/verify the `@peerweave` npm scope and final registry metadata. Repository metadata uses
+   `peerweavejs/peerweave`; the GitHub organization does not establish npm-scope ownership.
 2. Run `pnpm check`, `pnpm test:turn`, `pnpm test:mutations`, and the real-device checks below.
 3. Review `pnpm release:status`. Changesets propagate compatible workspace dependency versions;
    `pnpm release:version` applies release intents and generates changelog entries. Review its diff.

@@ -27,5 +27,24 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit -p tsconfig.json"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peerweavejs/peerweave.git",
+    "directory": "packages/call"
+  },
+  "homepage": "https://github.com/peerweavejs/peerweave/tree/main/packages/call#readme",
+  "bugs": {
+    "url": "https://github.com/peerweavejs/peerweave/issues"
+  },
+  "keywords": [
+    "peerweave",
+    "webrtc",
+    "typescript",
+    "browser",
+    "esm",
+    "video-calling",
+    "media",
+    "peer-to-peer"
+  ]
 }

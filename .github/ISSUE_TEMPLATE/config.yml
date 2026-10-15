@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/peerweavejs/peerweave/security/advisories/new
+    about: Do not disclose vulnerabilities, credentials or private data in public issues.
+  - name: Contribution and scope guide
+    url: https://github.com/peerweavejs/peerweave/blob/main/CONTRIBUTING.md
+    about: Check the repository boundary and development workflow before proposing a change.

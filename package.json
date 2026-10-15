@@ -43,5 +43,15 @@
     "typescript": "7.0.2",
     "vite": "8.3.4",
     "vitest": "5.0.4"
+  },
+  "description": "Composable, framework-independent browser WebRTC packages for peers, media capture, managed calls and optional WebSocket signaling.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peerweavejs/peerweave.git"
+  },
+  "homepage": "https://github.com/peerweavejs/peerweave#readme",
+  "bugs": {
+    "url": "https://github.com/peerweavejs/peerweave/issues"
   }
 }

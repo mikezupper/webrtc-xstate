@@ -15,6 +15,42 @@ Every page has instructions and live status. Call/transfer participants must use
 example and room. Their room namespaces are separate. The examples are local references;
 the development relay has no user authentication.
 
+## Testing through a Cloudflare Tunnel
+
+Route one tunnel hostname to `http://127.0.0.1:5173`. Vite serves the demo and forwards
+WebSocket upgrades on `/signaling` to the local relay on port 8787. The controllers select
+`wss://<page-host>/signaling` automatically when the page uses HTTPS.
+
+Allow the tunnel's exact hostname in `server.allowedHosts` in `vite.config.ts`, then start
+the demo with the full HTTPS page origin allowed by the relay:
+
+```sh
+PEERWEAVE_ALLOWED_ORIGINS='https://demo.example.com,http://127.0.0.1:5173,http://localhost:5173' pnpm dev
+```
+
+Replace `demo.example.com` with your tunnel hostname. `PEERWEAVE_ALLOWED_ORIGINS` accepts a
+comma-separated list, trims whitespace and ignores empty entries. An explicit list replaces
+the relay's default localhost origin policy; omit the variable for the local-only default.
+Restart `pnpm dev` after changing the environment. Origins include a scheme and any non-default
+port, with no path or trailing slash. Vite's hostname allowlist and the relay's origin allowlist
+are separate checks; retain both rather than disabling either.
+
+For a temporary tunnel, run this in a second terminal:
+
+```sh
+cloudflared tunnel --url http://127.0.0.1:5173
+```
+
+Use the generated `https://<random>.trycloudflare.com` hostname in both allowlists. A stable
+named tunnel avoids updating them each time the temporary URL changes. Cloudflare supports
+[WebSockets through Tunnel](https://developers.cloudflare.com/cloudflare-one/faq/cloudflare-tunnels-faq/).
+In browser developer tools, the `/signaling` upgrade should return 101; a relay response of
+403 means the page origin is not allowed (or the relay has reached its client limit).
+
+This tunnel carries signaling. WebRTC media and file bytes travel directly between peers or
+through a separate TURN service. Configure ICE servers for testing across separate networks,
+as described below. The relay remains a development reference rather than a production service.
+
 ## Media preflight
 
 Start a preview and allow camera/microphone access. Device labels become available after
@@ -66,6 +102,10 @@ controller. Application invitations (`support-invite/accept/decline/cancel`) and
 the public package protocol or expose XState.
 
 ## Production integration
+
+The separate `peerweave-deployment-example` repository owns the production application and
+infrastructure. See the [repository boundary](../../docs/deploying.md). These examples remain
+lightweight framework references with application-owned ICE configuration supplied by callers.
 
 The controllers accept caller-provided native ICE configuration. Obtain it from an authenticated
 backend before creating the runtime; do not embed long-lived relay credentials in source.
