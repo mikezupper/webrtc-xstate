@@ -5,7 +5,5 @@ packages:
 minimumReleaseAgeExclude:
   - playwright-core@1.64.1
   - playwright@1.64.1
-  - '@gyral/core@0.3.6'
-  - '@gyral/testing@0.3.6'
 
 strictPeerDependencies: true

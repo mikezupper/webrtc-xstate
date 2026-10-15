@@ -2,6 +2,10 @@
 
 Status: complete.
 
+Historical decision: the richer app and its original regressions now live in
+[peerweave-deployment-example](https://github.com/peerweavejs/peerweave-deployment-example).
+The framework sample is simplified by the [minimal demo plan](../completed/008-minimal-demo.md).
+
 ## Scope
 
 Refactor the current workbench with Gyral 0.3.6 and build media preflight, file transfer and

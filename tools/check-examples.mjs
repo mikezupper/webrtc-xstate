@@ -53,12 +53,11 @@ try {
       private: true,
       type: "module",
       packageManager: rootManifest.packageManager,
-      dependencies: { "@gyral/core": "0.3.6", ...tarballs },
+      dependencies: tarballs,
       devDependencies: {
         vite: rootManifest.devDependencies.vite,
         typescript: rootManifest.devDependencies.typescript,
         "@types/node": rootManifest.devDependencies["@types/node"],
-        parse5: "8.0.1",
       },
     }),
   );
@@ -104,15 +103,6 @@ try {
     configFile: false,
     root: fixture,
     resolve: { ...config.resolve, alias: {} },
-    build: {
-      rolldownOptions: {
-        input: Object.fromEntries(
-          ["index.html", "media/index.html", "transfer/index.html", "support/index.html"].map(
-            (path) => [path, resolve(fixture, path)],
-          ),
-        ),
-      },
-    },
   };
   await build(packedConfig);
   relay = await createSignalingServer({ port: 0 });
@@ -147,26 +137,23 @@ try {
   for (const page of [a, b])
     await page.waitForFunction(
       () =>
-        document.getElementById("call-status")?.textContent === "active" &&
+        document.getElementById("status")?.textContent === "Connected." &&
         document.getElementById("remote") instanceof HTMLVideoElement &&
         document.querySelector("#remote").videoWidth > 0,
       { timeout: 10000 },
     );
-  await a.getByLabel("Message", { exact: true }).fill("Packed APIs work");
-  await a.getByRole("button", { name: "Send", exact: true }).click();
-  await b.waitForFunction(() =>
-    document.getElementById("messages")?.textContent?.includes("Packed APIs work"),
-  );
-  await a.getByRole("button", { name: "Hang up", exact: true }).click();
+  await a.getByRole("button", { name: "Mute", exact: true }).click();
+  assert.equal(await a.locator("#mute").getAttribute("aria-pressed"), "true");
+  await a.getByRole("button", { name: "Leave", exact: true }).click();
   for (const page of [a, b])
     await page.waitForFunction(
       () =>
-        document.getElementById("call-status")?.textContent === "ended" &&
-        document.querySelector("#local").srcObject === null,
+        document.querySelector("#local").srcObject === null &&
+        document.querySelector("#remote").srcObject === null,
     );
   assert.deepEqual(errors, []);
   console.log(
-    "All four Gyral examples built and typed against freshly installed pnpm tarballs; native video, chat and hangup passed.",
+    "The minimal demo built and typed against freshly installed pnpm tarballs; native video, microphone control and leave cleanup passed.",
   );
 } finally {
   await browser?.close();

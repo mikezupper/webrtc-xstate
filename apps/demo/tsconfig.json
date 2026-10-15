@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["vite/client"],
-    "paths": { "@peerweave/peer": ["../../packages/peer/src/index.ts"] }
+    "types": ["vite/client"]
   },
   "include": ["src/**/*.ts"]
 }

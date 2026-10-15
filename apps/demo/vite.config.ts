@@ -1,24 +1,8 @@
 import { resolve } from "node:path";
-import { gyralVitePreset } from "@gyral/core/vite";
 import { defineConfig } from "vite";
 
-const preset = gyralVitePreset({ clientOnly: true });
 export default defineConfig({
-  ...preset,
-  optimizeDeps: {
-    ...preset.optimizeDeps,
-    entries: ["src/main.ts", "src/media/main.ts", "src/transfer/main.ts", "src/support/main.ts"],
-  },
-  build: {
-    rolldownOptions: {
-      input: {
-        workbench: resolve(import.meta.dirname, "index.html"),
-        media: resolve(import.meta.dirname, "media/index.html"),
-        transfer: resolve(import.meta.dirname, "transfer/index.html"),
-        support: resolve(import.meta.dirname, "support/index.html"),
-      },
-    },
-  },
+  optimizeDeps: { entries: ["src/main.ts"] },
   resolve: {
     alias: Object.fromEntries(
       ["peer", "media", "call", "signaling-websocket"].map((name) => [

@@ -205,28 +205,15 @@ importers:
 
   apps/demo:
     dependencies:
-      '@gyral/core':
-        specifier: 0.3.6
-        version: 0.3.6(parse5@8.0.1)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
       '@peerweave/call':
         specifier: workspace:^
         version: link:../../packages/call
       '@peerweave/media':
         specifier: workspace:^
         version: link:../../packages/media
-      '@peerweave/peer':
-        specifier: workspace:^
-        version: link:../../packages/peer
       '@peerweave/signaling-websocket':
         specifier: workspace:^
         version: link:../../packages/signaling-websocket
-    devDependencies:
-      '@gyral/testing':
-        specifier: 0.3.6
-        version: 0.3.6(parse5@8.0.1)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))(vitest@5.0.4)
-      parse5:
-        specifier: 8.0.1
-        version: 8.0.1
 
   apps/signaling-server:
     dependencies:
@@ -432,29 +419,6 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@gyral/core@0.3.6':
-    resolution: {integrity: sha512-Mk6PbELKMHgAO0C5gj0wfLfnq6+rMhLCpKSN/9lm/dNAnJFE8TXVf3vkUsORdTV5ifcMN7eHH3DWdbp4K329QQ==}
-    hasBin: true
-    peerDependencies:
-      eslint: ^9.0.0 || ^10.0.0
-      parse5: ^7.0.0 || ^8.0.0
-      vite: ^8.0.0
-    peerDependenciesMeta:
-      eslint:
-        optional: true
-      parse5:
-        optional: true
-      vite:
-        optional: true
-
-  '@gyral/testing@0.3.6':
-    resolution: {integrity: sha512-Kzq497HcwNHeDxlOkL1X0KtPzjTDn+A5nHhDwjAEyhwES8EPNjqcf1Xdfs6N5LPgWvHcbZQV1fEWQdA/SSNaaw==}
-    peerDependencies:
-      vitest: ^4.1.0 || ^5.0.0
-    peerDependenciesMeta:
-      vitest:
-        optional: true
-
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
     engines: {node: '>=6.0.0'}
@@ -596,15 +560,6 @@ packages:
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
     engines: {node: '>=10'}
-
-  '@sinonjs/commons@3.0.1':
-    resolution: {integrity: sha512-K3mCHKQ9sVh8o1C9cxkwxaOmXoAMlDxC1mYyHrjqOWEcBjYr76t96zL2zlj5dUGZ3HSw240X1qgH3Mjf1yJWpQ==}
-
-  '@sinonjs/fake-timers@15.4.0':
-    resolution: {integrity: sha512-DsG+8/LscQIQg68J6Ef3dv10u6nVyetYn923s3/sus5eaGfTo1of5WMZSLf0UJc9KDuKPilPH0UDJCjvNbDNCA==}
-
-  '@standard-schema/spec@1.1.0':
-    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -883,10 +838,6 @@ packages:
   emojilib@2.4.0:
     resolution: {integrity: sha512-5U0rVMU5Y2n2+ykNLQqMoqklN9ICBT/KsvC1Gz6vqHbz2AXXGkG+Pm5rMWk/8Vjrr/mY9985Hi8DYzn1F09Nyw==}
 
-  entities@8.1.0:
-    resolution: {integrity: sha512-kxL7msIffSuh9aaFAMD7rxAIuTRMAHMeBtgHW2yUdWw732ZNh4MehkF2gdjvtdmikkaIP9bFDDJOPlsvm7avrA==}
-    engines: {node: '>=20.19.0'}
-
   environment@1.1.0:
     resolution: {integrity: sha512-xUtoPkMggbz0MPyPiIWr1Kp4aeWJjDZ6SMvURhimjdZgsRuDplF5/s9hcgGhyXMhs+6vpnuoiZ2kFiu3FMnS8Q==}
     engines: {node: '>=18'}
@@ -1103,9 +1054,6 @@ packages:
   parse5@6.0.1:
     resolution: {integrity: sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==}
 
-  parse5@8.0.1:
-    resolution: {integrity: sha512-z1e/HMG90obSGeidlli3hj7cbocou0/wa5HacvI3ASx34PecNjNQeaHNo5WIZpWofN9kgkqV1q5YvXe3F0FoPw==}
-
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
@@ -1221,10 +1169,6 @@ packages:
   totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
-
-  type-detect@4.0.8:
-    resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==}
-    engines: {node: '>=4'}
 
   typescript@5.6.1-rc:
     resolution: {integrity: sha512-E3b2+1zEFu84jB0YQi9BORDjz9+jGbwwy1Zi3G0LUNw7a7cePUrHMRNy8aPh53nXpkFGVHSxIZo5vKTfYaFiBQ==}
@@ -1575,25 +1519,6 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@gyral/core@0.3.6(parse5@8.0.1)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-    optionalDependencies:
-      parse5: 8.0.1
-      vite: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
-
-  '@gyral/testing@0.3.6(parse5@8.0.1)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))(vitest@5.0.4)':
-    dependencies:
-      '@gyral/core': 0.3.6(parse5@8.0.1)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
-      '@sinonjs/fake-timers': 15.4.0
-      '@standard-schema/spec': 1.1.0
-    optionalDependencies:
-      vitest: 5.0.4(@types/node@26.6.5)(@vitest/browser-playwright@5.0.4)(@vitest/coverage-v8@5.0.4)(@vitest/ui@5.0.4)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
-    transitivePeerDependencies:
-      - eslint
-      - parse5
-      - vite
-
   '@jridgewell/resolve-uri@3.1.2': {}
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
@@ -1680,16 +1605,6 @@ snapshots:
   '@rolldown/pluginutils@1.0.1': {}
 
   '@sindresorhus/is@4.6.0': {}
-
-  '@sinonjs/commons@3.0.1':
-    dependencies:
-      type-detect: 4.0.8
-
-  '@sinonjs/fake-timers@15.4.0':
-    dependencies:
-      '@sinonjs/commons': 3.0.1
-
-  '@standard-schema/spec@1.1.0': {}
 
   '@types/chai@5.2.3':
     dependencies:
@@ -1926,8 +1841,6 @@ snapshots:
 
   emojilib@2.4.0: {}
 
-  entities@8.1.0: {}
-
   environment@1.1.0: {}
 
   es-module-lexer@2.3.2: {}
@@ -2091,10 +2004,6 @@ snapshots:
 
   parse5@6.0.1: {}
 
-  parse5@8.0.1:
-    dependencies:
-      entities: 8.1.0
-
   pathe@2.0.3: {}
 
   picocolors@1.1.1: {}
@@ -2208,8 +2117,6 @@ snapshots:
   tinyrainbow@3.2.0: {}
 
   totalist@3.0.1: {}
-
-  type-detect@4.0.8: {}
 
   typescript@5.6.1-rc: {}
 

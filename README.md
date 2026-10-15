@@ -52,11 +52,13 @@ pnpm dev
 
 Open `http://127.0.0.1:5173` in two tabs. Join the same room and press **Start call** in each.
 Allow camera/microphone access; the preview waits for both participants before negotiation starts.
-Disable microphone and camera first for chat only. Leave/rejoin to create a fresh session.
+Use **Mute** for microphone control and **Leave** to release media and signaling. Rejoin for a fresh session.
 
-The four examples cover calls/chat (`/`), independent capture (`/media/`), accepted file transfers
-(`/transfer/`) and support invitations (`/support/`). Their private Gyral 0.3.6 UI does not add a
-UI-framework dependency to the browser packages. See the [examples guide](apps/demo/README.md).
+The framework demo is one small page in plain TypeScript, HTML and CSS. Read its
+[DOM bindings](apps/demo/src/main.ts) and [session controller](apps/demo/src/session.ts) to follow
+the public APIs. The richer chat, preflight, file-transfer and support pages live in the
+[deployment example](https://github.com/peerweavejs/peerweave-deployment-example).
+See the [minimal demo guide](apps/demo/README.md).
 
 ## Architecture
 

@@ -6,6 +6,7 @@
 | Versioned, session-scoped signaling validation | Implemented | [Signaling](001-signaling.md) |
 | Native values and explicit resource ownership | Implemented | [API direction](002-api-direction.md) |
 | pnpm workspace; ESM artifacts and declaration checks | Accepted | [Foundation plan](../exec-plans/active/001-foundation.md) |
+| One minimal vanilla TS framework demo; richer UI and regressions in the deployment app | Accepted | [Demo plan](../exec-plans/completed/008-minimal-demo.md) |
 
 Public package names use the agreed Peerweave family. An npm scope must be owned before publication.
 

@@ -10,8 +10,7 @@ Peerweave is a pnpm workspace for composable browser WebRTC packages.
 - [Testing](docs/testing.md): test-first loop, coverage, native browser contracts.
 - [Reliability](docs/reliability.md): cancellation, recovery, signaling assumptions.
 - [Quality status](docs/quality.md): measured progress and remaining work.
-- [Examples guide](apps/demo/README.md), [Gyral plan](docs/exec-plans/active/002-gyral-examples.md)
-  and [visual design plan](docs/exec-plans/active/003-example-visual-design.md).
+- [Minimal demo](apps/demo/README.md) and [demo decision](docs/exec-plans/completed/008-minimal-demo.md).
 
 ## Commands
 
@@ -42,10 +41,11 @@ Peer, media, managed calls and the optional WebSocket adapter are implemented. T
 and relay run together with `pnpm dev`. Use the active plan, quality record and release procedure
 for measured results and remaining external publication checks. Keep all packages private.
 
-The private demo uses Gyral 0.3.6 for four linked examples. Keep its models/views pure and native
-resources in disposable drivers/controllers. Preserve the existing call regression assertions.
-Runtime Gyral dependencies must not enter public packages. `pnpm check:examples` validates a fresh
-packed consumer app without source aliases. Use semantic native controls and the layered CSS system.
+The private demo is one vanilla TypeScript video-call page. Keep DOM bindings in `main.ts` and
+native call/signaling ownership in `session.ts`. Preserve permission readiness, cancellation and
+cleanup. The richer Gyral app and its original browser/model/protocol assertions are owned by
+`peerweave-deployment-example`. `pnpm check:examples` validates this minimal page as a fresh packed
+consumer without source aliases. Use semantic native controls and compact layered CSS.
 
 - `pnpm test:turn` requires Linux/Docker; it tears down its own local Coturn container.
 - `pnpm release:status` previews Changeset releases; versioning and publication are separate.

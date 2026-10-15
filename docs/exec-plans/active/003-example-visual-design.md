@@ -2,6 +2,11 @@
 
 Status: complete.
 
+Historical design: the richer UI and its original regressions now live in
+[peerweave-deployment-example](https://github.com/peerweavejs/peerweave-deployment-example).
+The framework retains a smaller page with the same fonts/palette; see the
+[minimal demo plan](../completed/008-minimal-demo.md).
+
 ## Scope
 
 Restyle the four private examples to the approved "weave" mock: phase-driven colour, a glass

@@ -154,3 +154,29 @@ installation with the already-verified pinned pnpm. Both consumer gates also pas
 metadata cache under `CI=true`. No library APIs, existing assertions or deadlines changed, and
 no retries were introduced. Public networks and real devices remain external acceptance work.
 See the [publication record](exec-plans/completed/007-github-publication.md).
+
+## Minimal framework demo (2026-10-15)
+
+The framework now owns one vanilla TypeScript video-call page: Room/Join, local and remote
+video, Start, Mute, Leave, status and inline errors. The richer Gyral application and its three
+byte-identical model/protocol files and 18 original browser cases belong to the deployment repo.
+An AST comparison confirmed preservation of all 126 browser assertion statements; only fixture
+paths, authorized development room membership and the ICE API proxy changed. The earlier
+four-page measurements describe historical checkpoints.
+
+Both full local gates passed. Framework verification covers 138 library coverage cases,
+18 native contract cases, nine minimal-demo cases, strict types, build, lint, repository/package
+boundaries, installed archives, the fresh minimal consumer and bundle budgets. Coverage metrics
+at the top of this page remain unchanged. Application verification passed 42 unit/model/request
+cases, all 18 migrated browser cases and the built video/chat/file smoke.
+
+The new page covers permission readiness past the connection deadline, denied access, canceled
+and late acquisition, actual microphone enable/disable, owned-track cleanup, navigation/rejoin,
+signaling loss and native room constraints. A deliberate readiness bypass was caught and
+restored. Three-engine light/dark WCAG checks, narrow layouts, keyboard skip links and 200% zoom
+pass; desktop/mobile screenshots were inspected. No public package source/API changed and no
+tests were skipped or relaxed. See the [decision and evidence](exec-plans/completed/008-minimal-demo.md).
+
+Frozen installations passed in both repositories. The retained UDP/TCP relay-only data and ICE
+restart checks passed. All three existing critical behavior mutations were detected and restored,
+followed by 128 passing Node library/relay cases.

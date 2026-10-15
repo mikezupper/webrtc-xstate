@@ -10,8 +10,8 @@
 - `pnpm test:mutations`: targeted mutation audit, restoring sources and rerunning tests afterward.
 - `pnpm check`: lint, boundaries/docs, builds, types, coverage, browsers, demo, fresh packages, sizes.
 - `pnpm pack:release`: persist reviewable tarballs without publishing.
-- `pnpm check:examples`: build/typecheck all Gyral pages from freshly installed pnpm tarballs,
-  then verify actual native video/chat/hangup without workspace source aliases.
+- `pnpm check:examples`: build/typecheck the minimal page from freshly installed pnpm tarballs,
+  then verify native video, microphone control and leave cleanup without workspace source aliases.
 
 ## Test-first loop
 
@@ -37,7 +37,7 @@ video, sender replacement, transceivers, data channels, ICE restart and managed 
 Chromium tests additionally exercise native fake camera/microphone/screen acquisition and the
 complete managed capture stack. Native fake devices provide real browser tracks and permissions
 behavior without assuming hardware on a CI worker. The demo suite verifies remote playback,
-chat, terminal preview cleanup and native room-name constraints, including dashed names, invalid
+actual microphone controls, terminal preview cleanup and native room-name constraints, including dashed names, invalid
 characters and length limits without pattern console errors. Screenshots are stored under
 `.artifacts` for inspection.
 
@@ -53,19 +53,21 @@ Linux CI starts a headless PulseAudio service before native browser checks. Thes
 fixtures; no browser assertions, connection deadlines or application behavior are relaxed.
 
 Demo readiness tests advance the page clock past the original connection/recovery deadline,
-then connect a later participant and exchange actual native video and chat. They also cover
-chat-only readiness, leaving/rejoining with owned preview tracks stopped, and peer capture failure.
+then connect a later participant and exchange actual native video. They also cover pending/late
+capture cancellation, navigation/leave/rejoin with owned preview tracks stopped, signaling loss
+and peer capture failure.
 Pending/denied capture cases control the media acquisition boundary: fake-UI Chromium allows
 devices automatically, so these cases do not claim to automate real browser permission dialogs.
 
-The Gyral 0.3.6 examples additionally cover standalone preflight replacement and late cancellation,
-file acceptance/exact binary download/backpressure/decline/cancel/premature receipts, and support
-invitation acceptance/decline/cancel/collision. `apps/demo/tests` uses DOM-free `@gyral/testing`
-model checks and app-protocol validators. Native resources stay outside serializable models.
-The page suite checks all four routes in Chromium/Firefox/WebKit, both themes, narrow viewports,
-200% zoom, reduced motion, keyboard skip links and automated WCAG rules with axe. Screenshots
-live in `.artifacts/examples`; browser-engine checks do not replace actual devices or assistive
-technology review. The Gyral production template compiler uses parse5 for markup checks.
+The minimal page also has three-engine, light/dark, narrow-layout, keyboard, 200% zoom and axe
+checks. Screenshots live in `.artifacts/minimal`. Browser-engine checks do not replace actual
+devices or assistive technology review.
+
+The richer Gyral examples, their three unchanged model/protocol test files and all 18 original
+browser cases now belong to [peerweave-deployment-example](https://github.com/peerweavejs/peerweave-deployment-example).
+The migrated suite preserves all 126 original browser assertion statements, including call/chat,
+permission/readiness, preflight, exact file bytes, invitations and four-route accessibility.
+Only app paths, authorized development memberships and the ICE/backend proxy fixture changed.
 
 A native data-only reproduction established that initial Chromium ICE transport allocation must
 precede rollback. The wrapper waits for its first candidate/completion; all existing glare

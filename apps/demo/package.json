@@ -4,19 +4,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@gyral/core": "0.3.6",
     "@peerweave/call": "workspace:^",
     "@peerweave/media": "workspace:^",
-    "@peerweave/peer": "workspace:^",
     "@peerweave/signaling-websocket": "workspace:^"
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "typecheck": "tsc --noEmit"
-  },
-  "devDependencies": {
-    "@gyral/testing": "0.3.6",
-    "parse5": "8.0.1"
   }
 }

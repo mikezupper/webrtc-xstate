@@ -48,11 +48,15 @@ machine private and applies bounded policy around the public peer/media contract
 `apps/demo` binds those facades to DOM controls. `apps/signaling-server` is a private two-member
 room relay. Tooling, tests, design records and release intents are outside library runtime bundles.
 
-The demo is a Gyral 0.3.6 multi-page app: workbench, independent media preflight, peer-based file
-transfer and managed support calls. Pure UI models/views consume serializable controller snapshots.
-Driver commands perform actions; subscriptions own controller disposal, and an element hook binds
-each native video. Controllers retain streams/files/channels/URLs outside the models. Invitation and
-file protocols remain application examples. Framework dependencies do not enter any library.
+The framework demo is one plain TypeScript video-call page. `main.ts` binds native HTML controls
+and renders snapshots; `session.ts` owns room signaling and call resources. The app's readiness
+message waits for both participants' permissions before managed ICE deadlines begin. Leaving,
+peer departure and navigation release owned capture and detach video streams. Library APIs own
+negotiation and recovery. No UI framework is required to read or build this sample.
+
+The separate [deployment app](https://github.com/peerweavejs/peerweave-deployment-example) owns the
+richer four-page Gyral UI, its model/protocol/browser regressions, production identity/rooms and
+ICE credentials. It consumes installed package exports, and its UI is no longer copied here.
 
 ## API limits
 

@@ -1,5 +1,60 @@
 <!doctype html>
-<html lang="en" dir="ltr">
-<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><title>Call workbench — Peerweave examples</title><meta name="description" content="Connect two browser tabs with Peerweave. Explore native camera and microphone capture, screen sharing, connection recovery and a WebRTC data channel."/></head>
-<body><div id="app"><noscript><main><h1>Peerweave examples</h1><p>Enable JavaScript to run the interactive WebRTC examples.</p></main></noscript></div><script type="module" src="/src/main.ts"></script></body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A small Peerweave example: join a room and start a video call in two browser tabs." />
+    <title>A simple video call — Peerweave</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <main id="main" tabindex="-1" data-phase="idle">
+      <header>
+        <a class="brand" href="https://github.com/peerweavejs/peerweave">Peerweave <span> / minimal example</span></a>
+        <h1>A simple video call.</h1>
+        <p class="hint">Open two tabs, join the same room, then start the call in both.</p>
+      </header>
+      <section class="panel" aria-label="Video call">
+        <form id="join-form">
+          <div class="room-field">
+            <label for="room">Room</label>
+            <input id="room" name="room" value="hello" required pattern="[a-zA-Z0-9_\-]{1,64}" maxlength="64" autocomplete="off" spellcheck="false" aria-describedby="room-hint" />
+          </div>
+          <button id="join" type="submit" class="primary">Join room</button>
+        </form>
+        <p id="room-hint" class="hint">1–64 letters, numbers, dashes, or underscores.</p>
+        <div class="stage">
+          <figure>
+            <div class="video-frame">
+              <!-- biome-ignore lint/a11y/useMediaCaption: Live peer media has no prerecorded captions. -->
+              <video id="remote" width="640" height="360" autoplay playsinline aria-label="Your peer's video"></video>
+              <p class="placeholder">Waiting for your peer</p>
+            </div>
+            <figcaption><span class="dot" aria-hidden="true"></span>Your peer</figcaption>
+          </figure>
+          <figure>
+            <div class="video-frame">
+              <video id="local" width="640" height="360" autoplay playsinline muted aria-label="Your camera preview"></video>
+              <p class="placeholder">Your camera appears here</p>
+            </div>
+            <figcaption>You <span id="muted-note" hidden>· muted</span></figcaption>
+          </figure>
+        </div>
+        <fieldset class="controls">
+          <legend class="visually-hidden">Call controls</legend>
+          <button id="start" type="button" class="primary" disabled>Start call</button>
+          <button id="mute" type="button" aria-pressed="false" disabled>Mute</button>
+          <button id="leave" type="button" class="leave" disabled>Leave</button>
+        </fieldset>
+        <p id="status" role="status">Not joined.</p>
+        <p id="feedback" role="alert" hidden></p>
+      </section>
+      <footer>
+        <p>Built with Peerweave’s <a href="https://github.com/peerweavejs/peerweave/tree/main/packages/call">call API</a> and WebSocket signaling.</p>
+        <a href="https://github.com/peerweavejs/peerweave-deployment-example">Production deployment example ↗</a>
+      </footer>
+    </main>
+    <noscript><p>Enable JavaScript to join a video call.</p></noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
